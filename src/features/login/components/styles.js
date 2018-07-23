@@ -51,12 +51,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   errorView: {
-    // borderColor: "red",
-    // borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     width: "100%",
-    height: 32,
     backgroundColor: '#A5000011',
   },
   errorIcon: {
@@ -66,7 +63,7 @@ export const styles = StyleSheet.create({
   errorMessage: {
     fontFamily: constant.FONT_FAMILY_THEME,
     color: constant.COLOR_DARK_RED,
-    fontSize: 16,
+    fontSize: 14,
     paddingLeft: 4,
   }
 });
