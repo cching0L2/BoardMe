@@ -7,3 +7,12 @@ export const login = async (email, password) => {
         password: password,
     })
 }
+
+export const register = async (email, username, password, passwordConf) => {
+    return apiRequest('register', 'POST', {
+        email: email,
+        username: username,
+        password: password,
+        passwordConf: passwordConf,
+    })
+}

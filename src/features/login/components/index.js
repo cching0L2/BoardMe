@@ -30,13 +30,26 @@ export default class Login extends React.Component {
         // TODO: transition to next screen
         console.log("login successful")
       },
-      (err) => this.setState({errorMessage: LOGIN_FAILED})
+      (error) => this.setState({errorMessage: error.error || LOGIN_FAILED})
     )
   }
 
   onRegisterPressed = () => {
-    // TODO:  validate, and make API call
     const isValid = this.validate()
+
+    authApi.register(this.state.email, this.state.username, this.state.password, this.state.passwordConf).then(
+      () => {
+        // TODO: show toast
+        console.log("register successful")
+        // Prompt user to login, clear password
+        this.setState({
+          authState: AUTH_STATE_LOGIN,
+          password: '',
+          passwordConf: '',
+        })
+      },
+      (error) => this.setState({errorMessage: error.error || REGISTER_FAILED})
+    )
   }
 
   onChangeAuthStatePressed = () => {
@@ -71,7 +84,7 @@ export default class Login extends React.Component {
         this.setState({'errorMessage': ERROR_MISSING_USERNAME})
         return false
       }
-      if (!validator.isLength(this.state.password), {min: 6, max: undefined}) {
+      if (this.state.password.length < 6) {
         this.setState({'errorMessage': ERROR_PASSWORD_TOO_SHORT})
         return false
       }
@@ -97,6 +110,12 @@ export default class Login extends React.Component {
     return this.state.authState === AUTH_STATE_LOGIN ? 
       AUTH_STATE_LOGIN_SEND_TITLE :
       AUTH_STATE_REGISTER_SEND_TITLE
+  }
+
+  _getAuthStateCallback = () => {
+    return this.state.authState === AUTH_STATE_LOGIN ? 
+      this.onLoginPressed :
+      this.onRegisterPressed
   }
 
   _getInputGroupForAuthState = () => {
@@ -202,7 +221,7 @@ export default class Login extends React.Component {
             <SimpleButton
               title={this._getAuthStateSendTitle()}
               backgroundColor={constant.COLOR_THEME_ORANGE}
-              onPress={this.onLoginPressed}
+              onPress={this._getAuthStateCallback()}
               width={160}
               height={40}
             />
@@ -231,7 +250,7 @@ const ERROR_MISSING_USERNAME = "Username missing"
 const ERROR_PASSWORDS_DONT_MATCH = "Passwords do not match"
 
 const LOGIN_FAILED = "Login failed"
-const LOGIN_SUCCESSFUL = "Login successful"
+const REGISTER_FAILED = "Registration failed"
 
 const authButtonStyle = {
   width: 160,
